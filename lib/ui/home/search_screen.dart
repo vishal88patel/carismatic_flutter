@@ -1,6 +1,12 @@
+import 'dart:convert';
+
+import 'package:carismatic/ResponseModel/MainDataClass.dart';
 import 'package:carismatic/constants/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
+import '../../ResponseModel/get_brand_model_response_model.dart';
+import '../../ResponseModel/get_brands_response_MODEL.dart';
 import '../../model/search_model.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -11,6 +17,11 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+
+  GetBrandResponseModel getBrandsResponseModel=GetBrandResponseModel();
+  GetBrandModelResponseModel getModel=GetBrandModelResponseModel();
+  MainDataClass mainClass=MainDataClass();
+
   List<SearchModel> Tempmatches = [];
   List<SearchModel> _getSuggestions(String query) {
     List<SearchModel> matches = [];
@@ -32,6 +43,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     searchDat("");
+    getBrands();
     super.initState();
   }
 
@@ -61,49 +73,36 @@ class _SearchScreenState extends State<SearchScreen> {
                     keyboardTYPE: TextInputType.name, controller: controller,),
               ),
               Container(
-                height: 600,
+                height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
-                  itemCount:  Tempmatches.length,
+                  itemCount:  getBrandsResponseModel.data!.length,
                   scrollDirection: Axis.vertical,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return Container(
-                      height: 60,
-                      width: MediaQuery.of(context).size.width,
-                      child: Card(
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 14.0),
-                          child: Row(
-                            crossAxisAlignment:CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding:  EdgeInsets.only(left: 15,right: 15,),
-                                    child: Container(
-                                      height:30,
-
-                                      child: Text(Tempmatches[index].name),
-                                    ),
-                                  ),
-
-                                ],
-                              ),
-
-                              Expanded(child: Container()),
-                              Checkbox(value: select, onChanged: (bool? value) {
-                                setState(() {
-                                  select=!select;
-                                });
-                              },),
-                              SizedBox(width: 8,),
-                            ],
-                          ),
+                    return Card(
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text( getBrandsResponseModel.data![index].brandName.toString(),style: TextStyle(fontSize: 18),),
+                            Container(
+                              height: 100,
+                              child: ListView.builder(
+                                  itemCount: 5,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return GestureDetector(
+                                      onTap: (){
+                                      },
+                                      child: ListTile(
+                                          trailing: Checkbox(onChanged: (bool? value) {  }, value: false,),
+                                          title: Text("List item $index")),
+                                    );
+                                  }),
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -116,7 +115,56 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
+
+  Future<void> getBrands() async {
+    final uri = Uri.parse("https://carismatic.online/api/common/get_brands");
+
+
+    http.Response response = await http.get(uri,);
+    int statusCode = response.statusCode;
+    String responseBody = response.body;
+    var res = jsonDecode(responseBody);
+    getBrandsResponseModel= GetBrandResponseModel.fromJson(res);
+    getBrandsModel();
+
+    // if (res.status=="true") {
+    //
+    // } else {
+    // }
+    setState(() {
+
+    });
+  }
+
+  Future<void> getBrandsModel() async {
+    final uri = Uri.parse("https://carismatic.online/api/common/get_all_models");
+
+
+    http.Response response = await http.get(uri);
+    int statusCode = response.statusCode;
+    String responseBody = response.body;
+    var res = jsonDecode(responseBody);
+    getModel= GetBrandModelResponseModel.fromJson(res);
+    for(int i=0;i<=getBrandsResponseModel.data!.length;i++){
+
+      for(int k=0;i<=getModel.data!.length;k++){
+            if(getModel.data![k].modelId==getBrandsResponseModel.data![i].brandId){
+
+            }
+      }
+    }
+    // if (res.status=="true") {
+    //
+    // } else {
+    // }
+    setState(() {
+
+    });
+  }
+
 }
+
+
 class CUstomSearchBar extends StatelessWidget {
   CUstomSearchBar(
       {Key? key,
