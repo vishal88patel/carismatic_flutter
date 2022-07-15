@@ -1,0 +1,28 @@
+{
+    "automobiles": [
+        {
+            "name": "The 2020 BMW 5 Series",
+            "model": "5 Series",
+            "brand": "BMW",
+            "date": "2020-04-17"
+        },
+        {
+            "name": "The 2020 BMW 4 Series",
+            "model": "4 Series",
+            "brand": "BMW",
+            "date": "2020-04-17"
+        },
+        {
+            "name": "2020 Mercedes-Benz GLA 250",
+            "model": "GLA 250",
+            "brand": "Mercedes-Benz",
+            "date": "2020-04-17"
+        },
+        {
+            "name": "2020 Mercedes-Benz CLA 250",
+            "model": "CLA 250",
+            "brand": "Mercedes-Benz",
+            "date": "2020-04-17"
+        }
+    ]
+}
