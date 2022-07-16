@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:carismatic/ui/account/terms_conditions.dart';
 import 'package:carismatic/ui/home.dart';
 import 'package:flutter/material.dart';
 import 'package:carismatic/constants/constant.dart';
@@ -29,7 +30,7 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController _etDate = TextEditingController();
   bool _obscureText = true;
   IconData _iconVisible = Icons.visibility_off;
-
+  bool value = false;
   void _toggleObscureText() {
     setState(() {
       _obscureText = !_obscureText;
@@ -233,7 +234,37 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               const SizedBox(
-                height: 40,
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 24.0,
+                    width: 24.0,
+                    child: Checkbox(
+                      activeColor: Color(0xFF10a19a),
+                      value: this.value,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          this.value = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Text('Agree to ', style: GlobalStyle.accountInformationLabel),
+                  ),
+                  InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => TermsConditionsPage()));
+                      },
+                      child: Text('Terms and condition', style: GlobalStyle.terms)),
+                ],
+              ),
+              const SizedBox(
+                height: 30,
               ),
 
               TextButton(
