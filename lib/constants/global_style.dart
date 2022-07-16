@@ -158,6 +158,11 @@ class GlobalStyle{
       color: PRIMARY_COLOR
   );
 
+  static const TextStyle terms = TextStyle(
+      fontSize: 15,
+      color: PRIMARY_COLOR
+  );
+
   // verification
   static const TextStyle chooseVerificationTitle = TextStyle(
       fontSize: 16,

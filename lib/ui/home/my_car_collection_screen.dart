@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:carismatic/constants/constant.dart';
-
+import 'package:http/http.dart' as http;
 // TODO: Import google_mobile_ads.dart
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 // TODO: Import ad_helper.dart
@@ -18,6 +18,9 @@ import 'package:carismatic/model/search_model.dart';
 import 'package:carismatic/ui/reusable/global_function.dart';
 import 'package:carismatic/ui/reusable/global_widget.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+
+import '../../ResponseModel/get_user_cars.dart';
+import '../../utils/common_utils.dart';
 
 class MyCarCollectionScreen extends StatefulWidget {
   const MyCarCollectionScreen({ Key? key }) : super(key: key);
@@ -74,6 +77,7 @@ class _MyCarCollectionScreenState extends State<MyCarCollectionScreen> with Tick
 
   var selectedRange = const RangeValues(150.00, 1500.00);
 
+  List<UserCarData>userCarData = [];
 
   void _moveToHome() {
     showSaveModal();
@@ -107,11 +111,13 @@ class _MyCarCollectionScreenState extends State<MyCarCollectionScreen> with Tick
 
   @override
   void initState() {
+    getBrandsModel();
     _etDate = TextEditingController(text: _selectedDate.toLocal().toString().split(' ')[0]);
     _scrollController = ScrollController();
     _scrollController.addListener(_listenToScrollChange);
     // automobiles();
     myAutomobiles();
+
     // mercedesAutomobiles();
 
 
@@ -307,11 +313,12 @@ class _MyCarCollectionScreenState extends State<MyCarCollectionScreen> with Tick
                         ),
                         const SizedBox(height: 10,),
                         Expanded(
-                            child: ListView.builder(
+                            child:userCarData.isEmpty?Container():
+                            ListView.builder(
                                 scrollDirection: Axis.vertical,
-                                itemCount: myList.length,
+                                itemCount: userCarData.length,
                                 itemBuilder: (context, index) {
-                                  return automobileBuilder(myList[index]);
+                                  return automobileBuilder(index);
                                 }
                             )
                         )
@@ -376,12 +383,12 @@ class _MyCarCollectionScreenState extends State<MyCarCollectionScreen> with Tick
   }
 
 
-  automobileBuilder(Automobile automobile) {
+  automobileBuilder(int index) {
     return Card(
         elevation: 5,
         child: ListTile(
-            title: Text(automobile.name),
-            subtitle: Text('${automobile.brand}-${automobile.model}'),
+            title: Text(userCarData[index].modelName.toString()),
+            subtitle: Text(userCarData[index].brandName.toString()),
             trailing: OutlinedButton(
                 onPressed: () {
                 },
@@ -688,6 +695,21 @@ class _MyCarCollectionScreenState extends State<MyCarCollectionScreen> with Tick
             text: _selectedDate.toLocal().toString().split(' ')[0]);
       });
     }
+  }
+
+  Future<void> getBrandsModel() async {
+    final uri = Uri.parse("https://carismatic.online/api/common/get_all_models");
+
+
+    http.Response response = await http.get(uri);
+
+    String responseBody = response.body;
+    var res = jsonDecode(responseBody);
+    userCarData=res["data"];
+
+    setState(() {
+
+    });
   }
 }
 
