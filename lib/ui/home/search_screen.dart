@@ -21,6 +21,7 @@ class _SearchScreenState extends State<SearchScreen> {
   GetBrandResponseModel getBrandsResponseModel=GetBrandResponseModel();
   GetBrandModelResponseModel getModel=GetBrandModelResponseModel();
   MainDataClass mainClass=MainDataClass();
+  List<MainDataClass> ll=[];
 
   List<SearchModel> Tempmatches = [];
   List<SearchModel> _getSuggestions(String query) {
@@ -147,11 +148,11 @@ class _SearchScreenState extends State<SearchScreen> {
     getModel= GetBrandModelResponseModel.fromJson(res);
     for(int i=0;i<=getBrandsResponseModel.data!.length;i++){
 
-      for(int k=0;i<=getModel.data!.length;k++){
-            if(getModel.data![k].modelId==getBrandsResponseModel.data![i].brandId){
-
-            }
-      }
+      // for(int k=0;i<=getModel.data!.length;k++){
+      //       if(getModel.data![k].modelId==getBrandsResponseModel.data![i].brandId){
+      //         ll.add(MainDataClass(category: getBrandsResponseModel.data![i].brandName,subCategory: ));
+      //       }
+      // }
     }
     // if (res.status=="true") {
     //
