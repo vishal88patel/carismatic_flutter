@@ -20,30 +20,39 @@ class _SearchScreenState extends State<SearchScreen> {
 
   GetBrandResponseModel getBrandsResponseModel=GetBrandResponseModel();
   GetBrandModelResponseModel getModel=GetBrandModelResponseModel();
-  MainDataClass mainClass=MainDataClass();
-  List<MainDataClass> ll=[];
+  List<Data> brandList=[];
+  List<MainDataModel> mainDataList=[];
 
   List<SearchModel> Tempmatches = [];
-  List<SearchModel> _getSuggestions(String query) {
-    List<SearchModel> matches = [];
-    matches.addAll(searchData);
-    Tempmatches.addAll(searchData);
-    matches.retainWhere(
-        (data) => data.name.toLowerCase().contains(query.toLowerCase()));
-    return matches;
-  }
+  // List<SearchModel> _getSuggestions(String query) {
+  //   List<SearchModel> matches = [];
+  //   // matches.addAll(searchData);
+  //   // Tempmatches.addAll(searchData);
+  //   matches.retainWhere(
+  //       (data) => data.name.toLowerCase().contains(query.toLowerCase()));
+  //   return matches;
+  // }
 
-  void searchDat(String query) {
-     Tempmatches = [];
-     Tempmatches.addAll(searchData);
-    Tempmatches.addAll(searchData);
-     Tempmatches.retainWhere(
-        (data) => data.name.toLowerCase().contains(query.toLowerCase()));
+  // void searchDat(String text) {
+  //    Tempmatches = [];
+  //    // Tempmatches.addAll(searchData);
+  //   // Tempmatches.addAll(searchData);
+  //    Tempmatches.retainWhere(
+  //       (data) => data.name.toLowerCase().contains(text.toLowerCase()));
+  // }
+  void searchDat(String text) {
+    // brandList.clear();
+    //   for(int i =0;i<getBrandsResponseModel.data!.length;i++){
+    //     for(int k=0;k<getModel.data!.length;k++){
+    //       if(getModel.data![k].modelName.toString().toLowerCase().startsWith(text.toLowerCase())){
+    //         brandList.add(getModel.data)
+    //       }
+    //     }
+    //   }
   }
   bool select=false;
   @override
   void initState() {
-    searchDat("");
     getBrands();
     super.initState();
   }
@@ -73,14 +82,20 @@ class _SearchScreenState extends State<SearchScreen> {
                     validators: (e) {},
                     keyboardTYPE: TextInputType.name, controller: controller,),
               ),
-              Container(
+              getBrandsResponseModel.data!=null && getModel.data!=null?Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
-                  itemCount:  getBrandsResponseModel.data!.length,
+                  itemCount: mainDataList.length,
                   scrollDirection: Axis.vertical,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
+                    // List<String> templocalList=[];templocalList.clear();
+                    // for(int i=0;i<getModel.data!.length;i++){
+                    //   if(getBrandsResponseModel.data![index].brandId==getModel.data![i].brandId){
+                    //     templocalList.add(getModel.data![i].modelName.toString());
+                    //   }
+                    // }
                     return Card(
                       child: Container(
                         padding: EdgeInsets.all(10),
@@ -88,18 +103,19 @@ class _SearchScreenState extends State<SearchScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text( getBrandsResponseModel.data![index].brandName.toString(),style: TextStyle(fontSize: 18),),
+                            Text( mainDataList[index].category.toString(),style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500),),
                             Container(
-                              height: 100,
                               child: ListView.builder(
-                                  itemCount: 5,
-                                  itemBuilder: (BuildContext context, int index) {
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                  itemCount:  mainDataList[index].subCategory!.length,
+                                  itemBuilder: (BuildContext context, int i) {
                                     return GestureDetector(
                                       onTap: (){
                                       },
                                       child: ListTile(
                                           trailing: Checkbox(onChanged: (bool? value) {  }, value: false,),
-                                          title: Text("List item $index")),
+                                          title: Text(mainDataList[index].subCategory![i].name.toString())),
                                     );
                                   }),
                             ),
@@ -109,7 +125,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     );
                   },
                 ),
-              ),
+              ):Container(),
             ],
           ),
         )
@@ -126,6 +142,10 @@ class _SearchScreenState extends State<SearchScreen> {
     String responseBody = response.body;
     var res = jsonDecode(responseBody);
     getBrandsResponseModel= GetBrandResponseModel.fromJson(res);
+    for(int i=0;i<getBrandsResponseModel.data!.length;i++){
+      brandList.add(Data(brandId:getBrandsResponseModel.data![i].brandId ,brandName:getBrandsResponseModel.data![i].brandName ));
+    }
+
     getBrandsModel();
 
     // if (res.status=="true") {
@@ -146,14 +166,26 @@ class _SearchScreenState extends State<SearchScreen> {
     String responseBody = response.body;
     var res = jsonDecode(responseBody);
     getModel= GetBrandModelResponseModel.fromJson(res);
-    for(int i=0;i<=getBrandsResponseModel.data!.length;i++){
+    for(int i=0;i<getBrandsResponseModel.data!.length;i++){
+      var brandIId=getBrandsResponseModel.data![i].brandId;
+      List<SubCategory> tempList=[];
 
-      // for(int k=0;i<=getModel.data!.length;k++){
-      //       if(getModel.data![k].modelId==getBrandsResponseModel.data![i].brandId){
-      //         ll.add(MainDataClass(category: getBrandsResponseModel.data![i].brandName,subCategory: ));
-      //       }
-      // }
+      for(int k=0;k<getModel.data!.length;k++){
+
+        if(getModel.data![k].brandId==brandIId){
+
+
+         tempList.add(SubCategory(name:getModel.data![k].modelName ,isFavourite:false ));
+
+       }
+
+
+
+      }
+      mainDataList.add(MainDataModel(category:getBrandsResponseModel.data![i].brandName ,subCategory:tempList ));
+
     }
+
     // if (res.status=="true") {
     //
     // } else {
