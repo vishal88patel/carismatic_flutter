@@ -43,7 +43,7 @@ class CommonUtils {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20.0)),
               child: const Center(
-                child: CircularProgressIndicator(color:  Color(0xFF222F7E)),
+                child: CircularProgressIndicator(color:  Color(0xFF10a19a)),
               ),
             ),
           );

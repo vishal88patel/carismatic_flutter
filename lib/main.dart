@@ -1,9 +1,11 @@
 
+import 'package:carismatic/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:carismatic/ui/splash_screen.dart';
 void main() async {
 
-
+  WidgetsFlutterBinding.ensureInitialized();
+  await PreferenceUtils.init();
   runApp( MyApp());
 }
 

@@ -8,9 +8,12 @@ import 'package:http/http.dart' as http;
 import '../../ResponseModel/get_brand_model_response_model.dart';
 import '../../ResponseModel/get_brands_response_MODEL.dart';
 import '../../model/search_model.dart';
+import '../../utils/common_utils.dart';
+import '../../utils/preferences.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+  List<MainDataModel> ll;
+   SearchScreen({required this.ll});
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -22,7 +25,8 @@ class _SearchScreenState extends State<SearchScreen> {
   GetBrandModelResponseModel getModel=GetBrandModelResponseModel();
   List<Data> brandList=[];
   List<MainDataModel> mainDataList=[];
-
+  List<MainDataModel> mainDataListSearchh=[];
+ var searchWord="";
   List<SearchModel> Tempmatches = [];
   // List<SearchModel> _getSuggestions(String query) {
   //   List<SearchModel> matches = [];
@@ -41,19 +45,31 @@ class _SearchScreenState extends State<SearchScreen> {
   //       (data) => data.name.toLowerCase().contains(text.toLowerCase()));
   // }
   void searchDat(String text) {
-    // brandList.clear();
-    //   for(int i =0;i<getBrandsResponseModel.data!.length;i++){
-    //     for(int k=0;k<getModel.data!.length;k++){
-    //       if(getModel.data![k].modelName.toString().toLowerCase().startsWith(text.toLowerCase())){
-    //         brandList.add(getModel.data)
-    //       }
-    //     }
-    //   }
+
+      // for(int i =0;i<mainDataList.length;i++){
+      //   for(int k=0;k<mainDataList[i].subCategory!.length;k++){
+      //     if(mainDataList[i].subCategory![k].name.toString().toLowerCase().contains(text.toLowerCase())){
+      //       mainDataListSearchh.add(mainDataList[i]);
+      //     }else{
+      //     }
+      //   }
+      // }  // for(int i =0;i<mainDataList.length;i++){
+      //   for(int k=0;k<mainDataList[i].subCategory!.length;k++){
+      //     if(mainDataList[i].subCategory![k].name.toString().toLowerCase().contains(text.toLowerCase())){
+      //       mainDataListSearchh.add(mainDataList[i]);
+      //     }else{
+      //     }
+      //   }
+      // }
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text(text)));
+      setState(() {
+
+      });
   }
   bool select=false;
   @override
   void initState() {
-    getBrands();
+    mainDataList=widget.ll;
     super.initState();
   }
 
@@ -72,7 +88,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
                     },
                   onChanged: (val){
-                    searchDat(val!);
+                    // searchDat(val!);
+                    // searchWord=val;
                     setState(() {
 
                     });
@@ -82,11 +99,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     validators: (e) {},
                     keyboardTYPE: TextInputType.name, controller: controller,),
               ),
-              getBrandsResponseModel.data!=null && getModel.data!=null?Container(
+              Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
-                  itemCount: mainDataList.length,
+                  itemCount: searchWord.isEmpty?mainDataList.length:mainDataListSearchh.length,
                   scrollDirection: Axis.vertical,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
@@ -114,7 +131,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                       onTap: (){
                                       },
                                       child: ListTile(
-                                          trailing: Checkbox(onChanged: (bool? value) {  }, value: false,),
+                                          trailing: Checkbox(onChanged: (bool? value) async {
+                                            SaveUserEntry(action: 'save_entry', model_id:  mainDataList[index].subCategory![i].modelId.toString(), user_id: "${await PreferenceUtils.getString("user_id")}", brand_id:  mainDataList[index].categoryId.toString(),MainIndex: index,SubIndex: i);
+                                          }, value: mainDataList[index].subCategory![i].isFavourite,),
                                           title: Text(mainDataList[index].subCategory![i].name.toString())),
                                     );
                                   }),
@@ -125,75 +144,50 @@ class _SearchScreenState extends State<SearchScreen> {
                     );
                   },
                 ),
-              ):Container(),
+              )
             ],
           ),
         )
       ),
     );
   }
+  Future<void> SaveUserEntry({
+    required String action,
+    required String user_id,
+    required String brand_id,
+    required String model_id,
+    required int MainIndex,
+    required int SubIndex,
 
-  Future<void> getBrands() async {
-    final uri = Uri.parse("https://carismatic.online/api/common/get_brands");
+  }) async {
+    CommonUtils.showProgressDialog(context);
+    final headers = {
+      'Content-Type': 'application/json',
+    };
 
+    var request = http.MultipartRequest('POST',Uri.parse("https://carismatic.online/api/common/save_entry"));
 
-    http.Response response = await http.get(uri,);
-    int statusCode = response.statusCode;
-    String responseBody = response.body;
-    var res = jsonDecode(responseBody);
-    getBrandsResponseModel= GetBrandResponseModel.fromJson(res);
-    for(int i=0;i<getBrandsResponseModel.data!.length;i++){
-      brandList.add(Data(brandId:getBrandsResponseModel.data![i].brandId ,brandName:getBrandsResponseModel.data![i].brandName ));
+    request.headers.addAll(headers);
+    request.fields['action'] = action.toString();
+    request.fields['user_id'] = user_id.toString();
+    request.fields['brand_id'] = brand_id.toString();
+    request.fields['model_id'] = model_id.toString();
+
+    var response = await request.send();
+
+    var responsed = await http.Response.fromStream(response);
+    final responseData = json.decode(responsed.body);
+
+    if (responseData["status"].toString() == "true") {
+      CommonUtils.hideProgressDialog(context);
+      mainDataList[MainIndex].subCategory![SubIndex].isFavourite=true;
+      setState(() {});
+    } else {
+      CommonUtils.hideProgressDialog(context);
+      CommonUtils.showRedToastMessage(responseData["message"]);
     }
-
-    getBrandsModel();
-
-    // if (res.status=="true") {
-    //
-    // } else {
-    // }
-    setState(() {
-
-    });
   }
 
-  Future<void> getBrandsModel() async {
-    final uri = Uri.parse("https://carismatic.online/api/common/get_all_models");
-
-
-    http.Response response = await http.get(uri);
-    int statusCode = response.statusCode;
-    String responseBody = response.body;
-    var res = jsonDecode(responseBody);
-    getModel= GetBrandModelResponseModel.fromJson(res);
-    for(int i=0;i<getBrandsResponseModel.data!.length;i++){
-      var brandIId=getBrandsResponseModel.data![i].brandId;
-      List<SubCategory> tempList=[];
-
-      for(int k=0;k<getModel.data!.length;k++){
-
-        if(getModel.data![k].brandId==brandIId){
-
-
-         tempList.add(SubCategory(name:getModel.data![k].modelName ,isFavourite:false ));
-
-       }
-
-
-
-      }
-      mainDataList.add(MainDataModel(category:getBrandsResponseModel.data![i].brandName ,subCategory:tempList ));
-
-    }
-
-    // if (res.status=="true") {
-    //
-    // } else {
-    // }
-    setState(() {
-
-    });
-  }
 
 }
 
@@ -262,4 +256,5 @@ class CUstomSearchBar extends StatelessWidget {
       ),
     );
   }
+
 }

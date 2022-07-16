@@ -1,4 +1,5 @@
 
+import 'package:carismatic/ResponseModel/MainDataClass.dart';
 import 'package:carismatic/ui/home/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:carismatic/ui/account/tab_account.dart';
@@ -10,7 +11,8 @@ import 'home/my_car_collection_screen.dart';
 
 
 class HomePage extends StatefulWidget {
-  const HomePage({ Key? key }) : super(key: key);
+   HomePage(this.mainDataList );
+   final List<MainDataModel> mainDataList;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -19,10 +21,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late PageController _pageController;
   int _selectedPage = 0;
-
   List<Widget> pages = [
     // TabHomePage(),
-    SearchScreen(),
+    SearchScreen(ll: COnstantMainDataList),
     MyCarCollectionScreen(),
     //HomeScreen(),
     //MainPage(),
@@ -39,6 +40,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     // TODO: implement initState
+    COnstantMainDataList=widget.mainDataList;
     _pageController = PageController(initialPage: 0);
 
     super.initState();

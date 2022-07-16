@@ -8,6 +8,7 @@ import 'package:carismatic/constants/global_style.dart';
 import 'package:http/http.dart' as http;
 import '../../utils/common_utils.dart';
 import '../../utils/preferences.dart';
+import 'package:email_validator/email_validator.dart';
 
 
 class SignupPage extends StatefulWidget {
@@ -284,7 +285,26 @@ class _SignupPageState extends State<SignupPage> {
                     if(widget.fromList){
                       Navigator.pop(context);
                     }
-                    signUpByPhone();
+                    if(_etFname.text.isEmpty){
+                      CommonUtils.showRedToastMessage("Please Enter First Name");
+                    }else if (_etLname.text.isEmpty) {
+                      CommonUtils.showRedToastMessage("Please Enter Last Name");
+                    }else if (_etUname.text.isEmpty) {
+                      CommonUtils.showRedToastMessage("Please Enter User Name");
+                    }else if(_etEmail.text.isEmpty){
+                      CommonUtils.showRedToastMessage("Please Enter Email");
+                    }else if (!EmailValidator.validate(
+                        _etEmail.text)) {
+                      CommonUtils.showRedToastMessage("Please Enter Valid Email");
+                    }else if (_etNumber.text.isEmpty) {
+                      CommonUtils.showRedToastMessage("Please Enter Mobile Number");
+                    }else if (_etDate.text.isEmpty) {
+                      CommonUtils.showRedToastMessage("Please Enter Birthdate");
+                    }else if (_etPass.text.isEmpty) {
+                      CommonUtils.showRedToastMessage("Please Enter Password");
+                    }else{
+                      signUpByPhone();
+                    }
 
                   },
                   child: const Padding(
@@ -380,7 +400,7 @@ class _SignupPageState extends State<SignupPage> {
       PreferenceUtils.setString("user_name", responseData["registration_username"].toString());
       PreferenceUtils.setString("user_email", responseData["registration_email"].toString());
       CommonUtils.showGreenToastMessage(responseData["message"]);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  HomePage(COnstantMainDataList,)));
       setState(() {});
     } else {
       CommonUtils.hideProgressDialog(context);

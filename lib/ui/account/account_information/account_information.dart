@@ -64,7 +64,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                 Container(
                   margin: const EdgeInsets.only(top: 10),
                   alignment: Alignment.center,
-                  child: Text('Robert Steven', style: TextStyle(
+                  child: Text("${profile.isEmpty?"":profile["first_name"].toString()}"+" "+"${profile.isEmpty?"":profile["last_name"].toString()}", style: TextStyle(
                       fontSize: 18, fontWeight: FontWeight.bold, color: _color2
                   )),
                 ),
@@ -353,7 +353,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
   Future<void> getProfile() async {
     CommonUtils.showProgressDialog(context);
     //var user_id = PreferenceUtils.getString("user_id");
-    final uri = Uri.parse("https://carismatic.online/api/userauth/get_user_profile/?user_id=6");
+    final uri = Uri.parse("https://carismatic.online/api/userauth/get_user_profile/?user_id=${await PreferenceUtils.getString("user_id")}");
     final headers = {
       'Content-Type': 'application/json',
     };

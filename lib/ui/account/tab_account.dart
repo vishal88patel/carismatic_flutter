@@ -3,8 +3,14 @@ This is account page
 we used AutomaticKeepAliveClientMixin to keep the state when moving from 1 navbar to another navbar, so the page is not refresh overtime
  */
 
+import 'dart:convert';
+
 import 'package:carismatic/constants/constant.dart';
 import 'package:carismatic/constants/global_style.dart';
+import 'package:carismatic/utils/preferences.dart';
+import 'package:flutter/scheduler.dart';
+import '../../model/get_profile_response_model.dart';
+import '../../utils/common_utils.dart';
 import 'account_information/account_information.dart';
 import 'privacy_policy.dart';
 import 'terms_conditions.dart';
@@ -15,6 +21,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../authentication/signin.dart';
 import 'package:carismatic/ui/account/membership.dart';
 import 'contact_us.dart';
+import 'package:http/http.dart';
 
 class TabAccountPage extends StatefulWidget {
   @override
@@ -24,13 +31,42 @@ class TabAccountPage extends StatefulWidget {
 class _TabAccountPageState extends State<TabAccountPage> with AutomaticKeepAliveClientMixin {
   // initialize reusable widget
   final _reusableWidget = ReusableWidget();
-
+  GetProfileRESPONSEmODEL getProfileRESPONSEmODEL=GetProfileRESPONSEmODEL();
+  var userName="";
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      getProfile();
+    });
+  }
+  Future<void> getProfile() async {
+    CommonUtils.showProgressDialog(context);
+    //var user_id = PreferenceUtils.getString("user_id");
+    final uri = Uri.parse("https://carismatic.online/api/userauth/get_user_profile/?user_id=${await PreferenceUtils.getString("user_id")}");
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    Response response = await post(
+      uri,
+      headers: headers,
+    );
+    final responseData = json.decode(response.body);
+
+    if (responseData["status"].toString() == "true") {
+      getProfileRESPONSEmODEL = GetProfileRESPONSEmODEL.fromJson(responseData);
+      userName=getProfileRESPONSEmODEL.firstName.toString()+" "+getProfileRESPONSEmODEL.lastName.toString();
+      CommonUtils.hideProgressDialog(context);
+      setState((){
+
+      });
+    } else {
+      CommonUtils.showRedToastMessage(responseData["status"].toString());
+    }
   }
 
   @override
@@ -71,6 +107,7 @@ class _TabAccountPageState extends State<TabAccountPage> with AutomaticKeepAlive
                 //       toastLength: Toast.LENGTH_LONG);
                 // },
                 onTap: (){
+                  PreferenceUtils.clear();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => const SigninPage()));
                 },
                 child: Row(
@@ -127,7 +164,7 @@ class _TabAccountPageState extends State<TabAccountPage> with AutomaticKeepAlive
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Robert Steven', style: TextStyle(
+                 Text(userName, style: TextStyle(
                     fontSize: 18, fontWeight: FontWeight.bold
                 )),
                 const SizedBox(
