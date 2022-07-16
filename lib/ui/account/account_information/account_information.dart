@@ -1,9 +1,15 @@
+import 'dart:convert';
+
 import 'package:carismatic/constants/constant.dart';
 import 'package:carismatic/constants/global_style.dart';
+import 'package:flutter/scheduler.dart';
+import '../../../utils/common_utils.dart';
+import '../../../utils/preferences.dart';
 import 'edit_profile.dart';
 import 'package:carismatic/ui/reusable_widget.dart';
 import 'package:carismatic/ui/reusable/cache_image_network.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class AccountInformationPage extends StatefulWidget {
@@ -17,9 +23,13 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
   final Color _color2 = const Color(0xFF333333);
   final Color _color3 = const Color(0xFF666666);
   final _reusableWidget = ReusableWidget();
+  Map profile = {};
 
   @override
   void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      getProfile();
+    });
     super.initState();
   }
 
@@ -181,7 +191,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                           color: Colors.grey[700], fontSize: 13
                       )),
                       const SizedBox(height: 4),
-                      Text('Robert ', style: TextStyle(
+                      Text(profile.isEmpty?"":profile["first_name"].toString(), style: TextStyle(
                           color: _color3, fontSize: 15, fontWeight: FontWeight.bold
                       )),
                       const SizedBox(height: 16),
@@ -189,7 +199,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                           color: Colors.grey[700], fontSize: 13
                       )),
                       const SizedBox(height: 4),
-                      Text('steven', style: TextStyle(
+                      Text(profile.isEmpty?"":profile["last_name"].toString(), style: TextStyle(
                           color: _color3, fontSize: 15, fontWeight: FontWeight.bold
                       )),
                       const SizedBox(height: 16),
@@ -197,7 +207,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                           color: Colors.grey[700], fontSize: 13
                       )),
                       const SizedBox(height: 4),
-                      Text('robe23', style: TextStyle(
+                      Text(profile.isEmpty?"":profile["username"].toString(), style: TextStyle(
                           color: _color3, fontSize: 15, fontWeight: FontWeight.bold
                       )),
                       const SizedBox(height: 16),
@@ -205,7 +215,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                           color: Colors.grey[700], fontSize: 13
                       )),
                       const SizedBox(height: 4),
-                      Text('robertsteven@domain.com', style: TextStyle(
+                      Text(profile.isEmpty?"":profile["email"].toString(), style: TextStyle(
                           color: _color3, fontSize: 15, fontWeight: FontWeight.bold
                       )),
                       const SizedBox(height: 16),
@@ -213,7 +223,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                           color: Colors.grey[700], fontSize: 13
                       )),
                       const SizedBox(height: 4),
-                      Text('0985256113', style: TextStyle(
+                      Text(profile.isEmpty?"":profile["mobile"].toString(), style: TextStyle(
                           color: _color3, fontSize: 15, fontWeight: FontWeight.bold
                       )),
                       const SizedBox(height: 16),
@@ -221,7 +231,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                           color: Colors.grey[700], fontSize: 13
                       )),
                       const SizedBox(height: 4),
-                      Text('1999-09-19', style: TextStyle(
+                      Text(profile.isEmpty?"":profile["dob"].toString(), style: TextStyle(
                           color: _color3, fontSize: 15, fontWeight: FontWeight.bold
                       )),
 
@@ -339,4 +349,32 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
       },
     );
   }
+
+  Future<void> getProfile() async {
+    CommonUtils.showProgressDialog(context);
+    //var user_id = PreferenceUtils.getString("user_id");
+    final uri = Uri.parse("https://carismatic.online/api/userauth/get_user_profile/?user_id=6");
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    Response response = await post(
+      uri,
+      headers: headers,
+    );
+    final responseData = json.decode(response.body);
+
+    if (responseData["status"].toString() == "true") {
+      profile = responseData;
+      CommonUtils.hideProgressDialog(context);
+      CommonUtils.showGreenToastMessage("profile Successfully");
+      setState((){
+
+      });
+    } else {
+      CommonUtils.hideProgressDialog(context);
+      CommonUtils.showRedToastMessage(responseData["status"].toString());
+    }
+  }
+
 }

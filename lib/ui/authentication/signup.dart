@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:carismatic/ui/home.dart';
 import 'package:flutter/material.dart';
 import 'package:carismatic/constants/constant.dart';
 import 'package:carismatic/constants/global_style.dart';
+import 'package:http/http.dart' as http;
+import '../../utils/common_utils.dart';
+import '../../utils/preferences.dart';
 
 
 class SignupPage extends StatefulWidget {
@@ -15,8 +20,11 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final TextEditingController _etEmail = TextEditingController();
-  final TextEditingController _etName = TextEditingController();
+  final TextEditingController _etFname = TextEditingController();
+  final TextEditingController _etLname = TextEditingController();
+  final TextEditingController _etUname = TextEditingController();
   final TextEditingController _etNumber = TextEditingController();
+  final TextEditingController _etPass = TextEditingController();
   DateTime _selectedDate = DateTime.now(), initialDate = DateTime.now();
   TextEditingController _etDate = TextEditingController();
   bool _obscureText = true;
@@ -42,7 +50,9 @@ class _SignupPageState extends State<SignupPage> {
   @override
   void dispose() {
     _etEmail.dispose();
-    _etName.dispose();
+    _etFname.dispose();
+    _etLname.dispose();
+    _etUname.dispose();
     _etNumber.dispose();
     _etDate.dispose();
     super.dispose();
@@ -71,7 +81,7 @@ class _SignupPageState extends State<SignupPage> {
               ),
               TextFormField(
                 keyboardType: TextInputType.text,
-                controller: _etName,
+                controller: _etFname,
                 style: const TextStyle(color: CHARCOAL),
                 onChanged: (textValue) {
                   setState(() {});
@@ -92,7 +102,7 @@ class _SignupPageState extends State<SignupPage> {
               ),
               TextFormField(
                 keyboardType: TextInputType.text,
-                controller: _etName,
+                controller: _etLname,
                 style: const TextStyle(color: CHARCOAL),
                 onChanged: (textValue) {
                   setState(() {});
@@ -113,7 +123,7 @@ class _SignupPageState extends State<SignupPage> {
               ),
               TextFormField(
                 keyboardType: TextInputType.text,
-                controller: _etName,
+                controller: _etUname,
                 style: const TextStyle(color: CHARCOAL),
                 onChanged: (textValue) {
                   setState(() {});
@@ -204,6 +214,7 @@ class _SignupPageState extends State<SignupPage> {
               ),
               TextField(
                 obscureText: _obscureText,
+                controller: _etPass,
                 style: const TextStyle(color: CHARCOAL),
                 decoration: InputDecoration(
                   focusedBorder: const UnderlineInputBorder(
@@ -242,7 +253,8 @@ class _SignupPageState extends State<SignupPage> {
                     if(widget.fromList){
                       Navigator.pop(context);
                     }
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+                    signUpByPhone();
+
                   },
                   child: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 5.0),
@@ -305,6 +317,43 @@ class _SignupPageState extends State<SignupPage> {
         _etDate = TextEditingController(
             text: _selectedDate.toLocal().toString().split(' ')[0]);
       });
+    }
+  }
+
+  Future<void> signUpByPhone() async {
+    CommonUtils.showProgressDialog(context);
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    var request = http.MultipartRequest('POST',Uri.parse("https://carismatic.online/api/userauth/registration"));
+
+    request.headers.addAll(headers);
+    request.fields['firstname'] = _etFname.text.toString();
+    request.fields['lastname'] = _etLname.text.toString();
+    request.fields['username'] = _etUname.text.toString();
+    request.fields['email'] = _etEmail.text.toString();
+    request.fields['mobile'] = _etNumber.text.toString();
+    request.fields['dob'] = _etDate.text.toString();
+    request.fields['password'] = _etPass.text.toString();
+    request.fields['action'] = "do_registration";
+
+    var response = await request.send();
+
+    var responsed = await http.Response.fromStream(response);
+    final responseData = json.decode(responsed.body);
+
+    if (responseData["status"].toString() == "true") {
+      CommonUtils.hideProgressDialog(context);
+      PreferenceUtils.setString("user_id", responseData["registration_id"].toString());
+      PreferenceUtils.setString("user_name", responseData["registration_username"].toString());
+      PreferenceUtils.setString("user_email", responseData["registration_email"].toString());
+      CommonUtils.showGreenToastMessage(responseData["message"]);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+      setState(() {});
+    } else {
+      CommonUtils.hideProgressDialog(context);
+      CommonUtils.showRedToastMessage(responseData["message"]);
     }
   }
 }

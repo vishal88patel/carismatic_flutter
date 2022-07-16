@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:carismatic/constants/constant.dart';
 import 'package:carismatic/constants/global_style.dart';
+import '../../utils/common_utils.dart';
+import '../../utils/preferences.dart';
 import 'forgot_password.dart';
 import 'package:carismatic/ui/home.dart';
 import 'signup.dart';
+import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 class SigninPage extends StatefulWidget {
@@ -14,6 +20,7 @@ class SigninPage extends StatefulWidget {
 
 class _SigninPageState extends State<SigninPage> {
   final TextEditingController _etEmail = TextEditingController();
+  final TextEditingController _etPass = TextEditingController();
   bool _obscureText = true;
   IconData _iconVisible = Icons.visibility_off;
 
@@ -76,6 +83,7 @@ class _SigninPageState extends State<SigninPage> {
             TextField(
               obscureText: _obscureText,
               style: const TextStyle(color: CHARCOAL),
+              controller: _etPass,
               decoration: InputDecoration(
                 focusedBorder: const UnderlineInputBorder(
                     borderSide:
@@ -124,8 +132,9 @@ class _SigninPageState extends State<SigninPage> {
                   ),
                 ),
                 onPressed: () {
+                  signInByPhone();
                   //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => HomePage()), (Route<dynamic> route) => false);
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+
                   FocusScope.of(context).unfocus();
                 },
                 child: const Padding(
@@ -148,6 +157,7 @@ class _SigninPageState extends State<SigninPage> {
             Center(
               child: GestureDetector(
                 onTap: () {
+
                   Navigator.push(context, MaterialPageRoute(builder: (context) => const SignupPage()));
                   FocusScope.of(context).unfocus();
                 },
@@ -187,5 +197,37 @@ class _SigninPageState extends State<SigninPage> {
             ),
           ],
         ));
+  }
+
+  Future<void> signInByPhone() async {
+    CommonUtils.showProgressDialog(context);
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    var request = http.MultipartRequest('POST',Uri.parse("https://carismatic.online/api/userauth/login"));
+
+    request.headers.addAll(headers);
+    request.fields['email'] = _etEmail.text.toString();
+    request.fields['password'] = _etPass.text.toString();
+    request.fields['action'] = "do_login";
+
+    var response = await request.send();
+
+    var responsed = await http.Response.fromStream(response);
+    final responseData = json.decode(responsed.body);
+
+    if (responseData["status"].toString() == "true") {
+      CommonUtils.hideProgressDialog(context);
+      PreferenceUtils.setString("user_id", responseData["user_id"].toString());
+      PreferenceUtils.setString("user_name", responseData["user_name"].toString());
+      PreferenceUtils.setString("user_email", responseData["user_email"].toString());
+      CommonUtils.showGreenToastMessage(responseData["message"]);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+      setState(() {});
+    } else {
+      CommonUtils.hideProgressDialog(context);
+      CommonUtils.showRedToastMessage(responseData["message"]);
+    }
   }
 }

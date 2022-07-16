@@ -55,6 +55,7 @@ dev_dependencies:
   flashy_tab_bar2: ^0.0.4
   simple_animations: ^4.1.0
   flutter_typeahead: ^4.0.0
+  connectivity_plus: ^2.2.1
   #flutter_launcher_icons: "^0.9.2"
   shared_preferences: ^2.0.15
   # TODO: Add google_mobile_ads as a dependency
