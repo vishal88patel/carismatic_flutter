@@ -26,19 +26,20 @@ class _SplashScreenPageState extends State {
   List<MainDataModel> mainDataListSearchh=[];
   @override void initState() {
     super.initState();
-    changeRoute();
+    getBrands();
+
   }
   Future changeRoute() async {
     var id=PreferenceUtils.getString("user_id")??"";
     if(id!=null && id.isEmpty){
-      await Future.delayed(Duration(milliseconds: 3000), () {
+      await Future.delayed(Duration(milliseconds: 200), () {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SigninPage()));
       });
     }else{
 
       await Future.delayed(Duration(milliseconds: 200), () {
-        getBrands();
-        //
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  HomePage(mainDataList)));
+
 
       });
     }
@@ -103,7 +104,8 @@ class _SplashScreenPageState extends State {
     });
     mainDataListSearchh=mainDataList;
     COnstantMainDataList.addAll(mainDataList);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  HomePage(mainDataList)));
+    changeRoute();
+
 
   }
 
