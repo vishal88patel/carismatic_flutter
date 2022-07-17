@@ -57,21 +57,22 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       bottomNavigationBar: FlashyTabBar(
+        height: 60,
         selectedIndex: _selectedPage,
         showElevation: false,
         onItemSelected: (index) => _onItemTapped(index),
         items: [
           FlashyTabBarItem(
-            icon: const Icon(Icons.home_outlined, size: 23, color: PRIMARY_COLOR,),
-            title: const Text('Home'),
+            icon: const Icon(Icons.home_outlined, size: 24, color: PRIMARY_COLOR,),
+            title: const Text('Home',style: TextStyle(fontSize: 10)),
           ),
           FlashyTabBarItem(
-            icon: const Icon(Icons.car_rental, size: 23, color: PRIMARY_COLOR,),
-            title: const Text('My Car Collection'),
+            icon: const Icon(Icons.car_rental, size: 24, color: PRIMARY_COLOR,),
+            title: const Text('My Car\nCollection',style: TextStyle(fontSize: 10),),
           ),
           FlashyTabBarItem(
-            icon: const Icon(Icons.account_circle_outlined, size: 23, color: PRIMARY_COLOR,),
-            title: const Text('Account',),
+            icon: const Icon(Icons.account_circle_outlined, size: 24, color: PRIMARY_COLOR,),
+            title: const Text('Account',style: TextStyle(fontSize: 10)),
           ),
         ],
       ),

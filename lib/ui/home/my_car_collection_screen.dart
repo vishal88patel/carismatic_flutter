@@ -21,6 +21,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
 
 import '../../ResponseModel/get_user_cars.dart';
+import '../../utils/common_utils.dart';
 
 class MyCarCollectionScreen extends StatefulWidget {
   const MyCarCollectionScreen({Key? key}) : super(key: key);
@@ -235,7 +236,8 @@ class _MyCarCollectionScreenState extends State<MyCarCollectionScreen>
                         child: FadeAnimation(
                             1.4,
                             SizedBox(
-                              height: 50,
+                              height: 60,
+                              width: MediaQuery.of(context).size.width,
                               child: Container(
                                 margin: const EdgeInsets.symmetric(vertical: 8),
                                 child: GestureDetector(
@@ -310,7 +312,7 @@ class _MyCarCollectionScreenState extends State<MyCarCollectionScreen>
               SliverList(
                 delegate: SliverChildListDelegate([
                   Container(
-                      padding: const EdgeInsets.only(top: 20, left: 20),
+                      padding: const EdgeInsets.only(top: 20, left: 15,right: 15),
                       height: MediaQuery.of(context).size.height,
                       child: Column(children: [
                         Row(
@@ -344,13 +346,16 @@ class _MyCarCollectionScreenState extends State<MyCarCollectionScreen>
                                   child: CircularProgressIndicator(color: PRIMARY_COLOR),
                                 ),
                             )
-                            : Expanded(
-                                child: ListView.builder(
+                            : Container(
+                          height: MediaQuery.of(context).size.height/1.75,
+                              child: ListView.builder(
+                                  shrinkWrap: true,
                                     scrollDirection: Axis.vertical,
                                     itemCount: userCarData.length,
                                     itemBuilder: (context, index) {
                                       return automobileBuilder(index);
-                                    }))
+                                    }),
+                            )
                       ])),
                 ]),
               ),
@@ -416,7 +421,13 @@ class _MyCarCollectionScreenState extends State<MyCarCollectionScreen>
             subtitle: Text(userCarData[index].brandName.toString()),
             trailing: OutlinedButton(
                 onPressed: () {},
-                child: const Icon(Icons.delete, color: Colors.red))));
+                child: InkWell(
+                    onTap: (){
+                      userCarData.removeAt(index);
+                      deleteCar(index+1);
+                      setState(() {});
+                    },
+                    child: const Icon(Icons.delete, color: Colors.red)))));
     // return AspectRatio(
     //   aspectRatio: 1 / 0.5,
     //   child: FadeAnimation(1.5, GestureDetector(
@@ -795,5 +806,34 @@ class _MyCarCollectionScreenState extends State<MyCarCollectionScreen>
     }
 
     setState(() {});
+  }
+
+  Future<void> deleteCar(int index) async {
+    CommonUtils.showProgressDialog(context);
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    var request = http.MultipartRequest('POST',Uri.parse("https://carismatic.online/api/common/delete_car_entry"));
+
+    request.headers.addAll(headers);
+    request.fields['user_id'] = PreferenceUtils.getString("user_id");
+    request.fields['model_id'] = index.toString();
+    request.fields['action'] = "delete_entry";
+
+    var response = await request.send();
+
+    var responsed = await http.Response.fromStream(response);
+    final responseData = json.decode(responsed.body);
+
+    if (responseData["status"].toString() == "true") {
+      CommonUtils.hideProgressDialog(context);
+      CommonUtils.showGreenToastMessage(responseData["message"]);
+      FocusScope.of(context).unfocus();
+      setState(() {});
+    } else {
+      CommonUtils.hideProgressDialog(context);
+      CommonUtils.showRedToastMessage(responseData["message"]);
+    }
   }
 }
