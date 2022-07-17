@@ -186,8 +186,8 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                 //   ],
                 // ),
                 Container(
+                  width: MediaQuery.of(context).size.width,
 
-                  margin: const EdgeInsets.only(top: 32),
                   padding: const EdgeInsets.all(32),
                   decoration: const BoxDecoration(
                     color: Colors.white,
