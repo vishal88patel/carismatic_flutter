@@ -28,6 +28,7 @@ class Data1 {
   String? modelId;
   String? brandId;
   String? modelName;
+  bool? ischceck;
 
   Data1({this.modelId, this.brandId, this.modelName});
 
@@ -35,6 +36,7 @@ class Data1 {
     modelId = json['model_id'];
     brandId = json['brand_id'];
     modelName = json['model_name'];
+    ischceck = json['is_chceck'];
   }
 
   Map<String, dynamic> toJson() {
@@ -42,6 +44,7 @@ class Data1 {
     data['model_id'] = this.modelId;
     data['brand_id'] = this.brandId;
     data['model_name'] = this.modelName;
+    data['is_chceck'] = this.ischceck;
     return data;
   }
 }

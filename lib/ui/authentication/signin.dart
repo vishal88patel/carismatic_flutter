@@ -234,7 +234,7 @@ class _SigninPageState extends State<SigninPage> {
       PreferenceUtils.setString("user_name", responseData["user_name"].toString());
       PreferenceUtils.setString("user_email", responseData["user_email"].toString());
       CommonUtils.showGreenToastMessage(responseData["message"]);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  HomePage(COnstantMainDataList)));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  HomePage()));
       setState(() {});
     } else {
       CommonUtils.hideProgressDialog(context);

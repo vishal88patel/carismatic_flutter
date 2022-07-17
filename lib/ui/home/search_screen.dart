@@ -69,6 +69,11 @@ class _SearchScreenState extends State<SearchScreen> {
   bool select=false;
   @override
   void initState() {
+    Future.delayed(Duration(milliseconds: 4000),(){
+      setState(() {
+
+      });
+    });
     mainDataList=widget.ll;
     super.initState();
   }

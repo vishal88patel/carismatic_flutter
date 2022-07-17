@@ -344,13 +344,18 @@ class _MyCarCollectionScreenState extends State<MyCarCollectionScreen>
                                   child: CircularProgressIndicator(color: PRIMARY_COLOR),
                                 ),
                             )
-                            : Expanded(
-                                child: ListView.builder(
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: userCarData.length,
-                                    itemBuilder: (context, index) {
-                                      return automobileBuilder(index);
-                                    }))
+                            : SizedBox(
+                          height: 510,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 18.0),
+                                  child: ListView.builder(
+                                    physics: BouncingScrollPhysics(),
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: userCarData.length,
+                                      itemBuilder: (context, index) {
+                                        return automobileBuilder(index);
+                                      }),
+                                ))
                       ])),
                 ]),
               ),

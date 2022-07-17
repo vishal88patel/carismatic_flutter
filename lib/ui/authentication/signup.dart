@@ -400,7 +400,7 @@ class _SignupPageState extends State<SignupPage> {
       PreferenceUtils.setString("user_name", responseData["registration_username"].toString());
       PreferenceUtils.setString("user_email", responseData["registration_email"].toString());
       CommonUtils.showGreenToastMessage(responseData["message"]);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  HomePage(COnstantMainDataList,)));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  HomePage()));
       setState(() {});
     } else {
       CommonUtils.hideProgressDialog(context);
