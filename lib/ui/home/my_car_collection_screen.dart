@@ -46,9 +46,9 @@ class _MyCarCollectionScreenState extends State<MyCarCollectionScreen>
 
   List<SearchModel> _getSuggestions(String query) {
     List<SearchModel> matches = [];
-    matches.addAll(searchData);
-    matches.retainWhere(
-        (data) => data.name.toLowerCase().contains(query.toLowerCase()));
+    // matches.addAll(searchData);
+    // matches.retainWhere(
+    //     (data) => data.name.toLowerCase().contains(query.toLowerCase()));
     return matches;
   }
 
