@@ -72,9 +72,20 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                   margin: const EdgeInsets.only(top: 5),
                   alignment: Alignment.center,
                   child: GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       // Fluttertoast.showToast(msg: 'Click edit profile', toastLength: Toast.LENGTH_SHORT);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage()));
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditProfilePage(
+                                        fName: profile["first_name"],
+                                        uName: profile["username"],
+                                        lName: profile["last_name"],
+                                        bDate: profile["dob"],
+                                        eMail: profile["email"],
+                                        number: profile["mobile"],
+                                      )))
+                          .then((value) => getProfileWithoutLoader());
                     },
                     child: Text('edit profile', style: TextStyle(
                         fontSize: 14, fontWeight: FontWeight.bold, color: _color1, decoration: TextDecoration.underline, decorationThickness: 2
@@ -368,13 +379,35 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
       profile = responseData;
       CommonUtils.hideProgressDialog(context);
       CommonUtils.showGreenToastMessage("profile Successfully");
-      setState((){
-
-      });
+      setState(() {});
     } else {
       CommonUtils.hideProgressDialog(context);
       CommonUtils.showRedToastMessage(responseData["status"].toString());
     }
   }
 
+  Future<void> getProfileWithoutLoader() async {
+    //var user_id = PreferenceUtils.getString("user_id");
+    final uri = Uri.parse(
+        "https://carismatic.online/api/userauth/get_user_profile/?user_id=${await PreferenceUtils.getString("user_id")}");
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    Response response = await post(
+      uri,
+      headers: headers,
+    );
+    final responseData = json.decode(response.body);
+
+    if (responseData["status"].toString() == "true") {
+      profile.clear();
+      profile = responseData;
+      CommonUtils.showGreenToastMessage("profile Successfully");
+      setState(() {});
+    } else {
+      CommonUtils.hideProgressDialog(context);
+      CommonUtils.showRedToastMessage(responseData["status"].toString());
+    }
+  }
 }

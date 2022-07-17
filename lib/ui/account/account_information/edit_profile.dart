@@ -5,15 +5,29 @@ include file in reuseable/global_function.dart to call function from GlobalFunct
 include file in reuseable/global_widget.dart to call function from GlobalWidget
  */
 
+import 'dart:convert';
+
 import 'package:carismatic/constants/constant.dart';
 import 'package:carismatic/constants/global_style.dart';
 import 'package:carismatic/ui/reusable_widget.dart';
 import 'package:carismatic/ui/reusable/global_function.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import '../../../utils/common_utils.dart';
+import '../../../utils/preferences.dart';
 
 
 
 class EditProfilePage extends StatefulWidget {
+  final String? fName;
+  final String? lName;
+  final String? uName;
+  final String? eMail;
+  final String? number;
+  final String? bDate;
+
+  const EditProfilePage({this.fName, this.lName, this.uName, this.eMail, this.number, this.bDate}) : super();
+
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
 }
@@ -47,12 +61,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   void initState() {
-    _etEmail = TextEditingController(text: 'robertsteven@gmail.com');
-    _etFirstName = TextEditingController(text: 'robert');
-    _etLastName = TextEditingController(text: 'steven');
-    _etUserName = TextEditingController(text: 'rob23');
-    _etNumber = TextEditingController(text: '0967453212');
-    _etDate = TextEditingController(text: _selectedDate.toLocal().toString().split(' ')[0]);
+    _etEmail.text = widget.eMail.toString();
+    _etFirstName.text = widget.fName.toString();
+    _etLastName.text = widget.lName.toString();
+    _etUserName.text = widget.uName.toString();
+    _etNumber.text = widget.number.toString();
+    _etDate.text = widget.bDate.toString();
     if(_globalFunction.validateEmail(_etEmail.text)){
       _buttonDisabled = false;
     }
@@ -258,8 +272,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
                 onPressed: () {
                   if(_buttonDisabled){
-                    _reusableWidget.startLoading(context, 'Edit Profile Success', 1);
-                    FocusScope.of(context).unfocus();
+                    editProfile();
+
                   }
                 },
                 child: Padding(
@@ -301,6 +315,40 @@ class _EditProfilePageState extends State<EditProfilePage> {
         _etDate = TextEditingController(
             text: _selectedDate.toLocal().toString().split(' ')[0]);
       });
+    }
+  }
+
+  Future<void> editProfile() async {
+    CommonUtils.showProgressDialog(context);
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    var request = http.MultipartRequest('POST',Uri.parse("https://carismatic.online/api/userauth/update_profile"));
+
+    request.headers.addAll(headers);
+    request.fields['user_id'] = PreferenceUtils.getString("user_id");
+    request.fields['firstname'] = _etFirstName.text.toString();
+    request.fields['lastname'] = _etLastName.text.toString();
+    request.fields['username'] = _etUserName.text.toString();
+    request.fields['email'] = _etEmail.text.toString();
+    request.fields['mobile'] = _etNumber.text.toString();
+    request.fields['dob'] = _etDate.text.toString();
+    request.fields['action'] = "do_update";
+
+    var response = await request.send();
+
+    var responsed = await http.Response.fromStream(response);
+    final responseData = json.decode(responsed.body);
+
+    if (responseData["status"].toString() == "true") {
+      CommonUtils.hideProgressDialog(context);
+      _reusableWidget.startLoading(context, 'Edit Profile Success', 1);
+      FocusScope.of(context).unfocus();
+      setState(() {});
+    } else {
+      CommonUtils.hideProgressDialog(context);
+      CommonUtils.showRedToastMessage(responseData["message"]);
     }
   }
 }
