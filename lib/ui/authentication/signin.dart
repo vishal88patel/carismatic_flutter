@@ -10,6 +10,7 @@ import 'signup.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:email_validator/email_validator.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({Key? key}) : super(key: key);
@@ -132,7 +133,17 @@ class _SigninPageState extends State<SigninPage> {
                   ),
                 ),
                 onPressed: () {
-                  signInByPhone();
+                  if(_etEmail.text.isEmpty){
+                    CommonUtils.showRedToastMessage("Please Enter Email");
+                  }else if (!EmailValidator.validate(
+                      _etEmail.text)) {
+                    CommonUtils.showRedToastMessage("Please Enter Valid Email");
+                  }else if (_etPass.text.isEmpty) {
+                    CommonUtils.showRedToastMessage("Please Enter Password");
+                  }else{
+                    signInByPhone();
+
+                  }
                   //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => HomePage()), (Route<dynamic> route) => false);
 
                   FocusScope.of(context).unfocus();
@@ -223,7 +234,7 @@ class _SigninPageState extends State<SigninPage> {
       PreferenceUtils.setString("user_name", responseData["user_name"].toString());
       PreferenceUtils.setString("user_email", responseData["user_email"].toString());
       CommonUtils.showGreenToastMessage(responseData["message"]);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  HomePage(COnstantMainDataList)));
       setState(() {});
     } else {
       CommonUtils.hideProgressDialog(context);

@@ -64,11 +64,9 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                 Container(
                   margin: const EdgeInsets.only(top: 10),
                   alignment: Alignment.center,
-                  child: Text('Robert Steven',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: _color2)),
+                  child: Text("${profile.isEmpty?"":profile["first_name"].toString()}"+" "+"${profile.isEmpty?"":profile["last_name"].toString()}", style: TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold, color: _color2
+                  )),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 5),
@@ -89,13 +87,9 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                       )))
                           .then((value) => getProfileWithoutLoader());
                     },
-                    child: Text('edit profile',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: _color1,
-                            decoration: TextDecoration.underline,
-                            decorationThickness: 2)),
+                    child: Text('edit profile', style: TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.bold, color: _color1, decoration: TextDecoration.underline, decorationThickness: 2
+                    )),
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -192,92 +186,78 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                 //   ],
                 // ),
                 Container(
+
                   margin: const EdgeInsets.only(top: 32),
                   padding: const EdgeInsets.all(32),
                   decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(10.0)
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('First Name',
-                          style:
-                              TextStyle(color: Colors.grey[700], fontSize: 13)),
+                      Text('First Name', style: TextStyle(
+                          color: Colors.grey[700], fontSize: 13
+                      )),
                       const SizedBox(height: 4),
-                      Text(
-                          profile.isEmpty
-                              ? ""
-                              : profile["first_name"].toString(),
-                          style: TextStyle(
-                              color: _color3,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold)),
+                      Text(profile.isEmpty?"":profile["first_name"].toString(), style: TextStyle(
+                          color: _color3, fontSize: 15, fontWeight: FontWeight.bold
+                      )),
                       const SizedBox(height: 16),
-                      Text('Last Name',
-                          style:
-                              TextStyle(color: Colors.grey[700], fontSize: 13)),
+                      Text('Last Name', style: TextStyle(
+                          color: Colors.grey[700], fontSize: 13
+                      )),
                       const SizedBox(height: 4),
-                      Text(
-                          profile.isEmpty
-                              ? ""
-                              : profile["last_name"].toString(),
-                          style: TextStyle(
-                              color: _color3,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold)),
+                      Text(profile.isEmpty?"":profile["last_name"].toString(), style: TextStyle(
+                          color: _color3, fontSize: 15, fontWeight: FontWeight.bold
+                      )),
                       const SizedBox(height: 16),
-                      Text('User Name',
-                          style:
-                              TextStyle(color: Colors.grey[700], fontSize: 13)),
+                      Text('User Name', style: TextStyle(
+                          color: Colors.grey[700], fontSize: 13
+                      )),
                       const SizedBox(height: 4),
-                      Text(
-                          profile.isEmpty ? "" : profile["username"].toString(),
-                          style: TextStyle(
-                              color: _color3,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold)),
+                      Text(profile.isEmpty?"":profile["username"].toString(), style: TextStyle(
+                          color: _color3, fontSize: 15, fontWeight: FontWeight.bold
+                      )),
                       const SizedBox(height: 16),
-                      Text('Email',
-                          style:
-                              TextStyle(color: Colors.grey[700], fontSize: 13)),
+                      Text('Email', style: TextStyle(
+                          color: Colors.grey[700], fontSize: 13
+                      )),
                       const SizedBox(height: 4),
-                      Text(profile.isEmpty ? "" : profile["email"].toString(),
-                          style: TextStyle(
-                              color: _color3,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold)),
+                      Text(profile.isEmpty?"":profile["email"].toString(), style: TextStyle(
+                          color: _color3, fontSize: 15, fontWeight: FontWeight.bold
+                      )),
                       const SizedBox(height: 16),
-                      Text('Phone Number',
-                          style:
-                              TextStyle(color: Colors.grey[700], fontSize: 13)),
+                      Text('Phone Number', style: TextStyle(
+                          color: Colors.grey[700], fontSize: 13
+                      )),
                       const SizedBox(height: 4),
-                      Text(profile.isEmpty ? "" : profile["mobile"].toString(),
-                          style: TextStyle(
-                              color: _color3,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold)),
+                      Text(profile.isEmpty?"":profile["mobile"].toString(), style: TextStyle(
+                          color: _color3, fontSize: 15, fontWeight: FontWeight.bold
+                      )),
                       const SizedBox(height: 16),
-                      Text('Date of Birth',
-                          style:
-                              TextStyle(color: Colors.grey[700], fontSize: 13)),
+                      Text('Date of Birth', style: TextStyle(
+                          color: Colors.grey[700], fontSize: 13
+                      )),
                       const SizedBox(height: 4),
-                      Text(profile.isEmpty ? "" : profile["dob"].toString(),
-                          style: TextStyle(
-                              color: _color3,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold)),
+                      Text(profile.isEmpty?"":profile["dob"].toString(), style: TextStyle(
+                          color: _color3, fontSize: 15, fontWeight: FontWeight.bold
+                      )),
+
                     ],
                   ),
                 )
               ],
             ),
           ),
-        ));
+        )
+    );
   }
 
-  Widget _createProfilePicture() {
-    final double profilePictureSize = MediaQuery.of(context).size.width / 3;
+  Widget _createProfilePicture(){
+    final double profilePictureSize = MediaQuery.of(context).size.width/3;
     return Align(
       alignment: Alignment.center,
       child: Container(
@@ -296,18 +276,15 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                 child: Hero(
                   tag: 'profilePicture',
                   child: ClipOval(
-                      child: buildCacheNetworkImage(
-                          width: profilePictureSize,
-                          height: profilePictureSize,
-                          url: '$GLOBAL_URL/assets/images/user/avatar.png')),
+                      child: buildCacheNetworkImage(width: profilePictureSize, height: profilePictureSize, url : '$GLOBAL_URL/assets/images/user/avatar.png')
+                  ),
                 ),
               ),
               // create edit icon in the picture
               Container(
                 width: 30,
                 height: 30,
-                margin: EdgeInsets.only(
-                    top: 0, left: MediaQuery.of(context).size.width / 4),
+                margin: EdgeInsets.only(top: 0, left: MediaQuery.of(context).size.width/4),
                 child: Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
@@ -316,6 +293,8 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                   child: const Icon(Icons.edit, size: 12, color: CHARCOAL),
                 ),
               ),
+
+
             ],
           ),
         ),
@@ -350,27 +329,23 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
         onPressed: () {
           Navigator.pop(context);
         },
-        child: const Text('No', style: TextStyle(color: SOFT_BLUE)));
+        child: const Text('No', style: TextStyle(color: SOFT_BLUE))
+    );
     Widget continueButton = TextButton(
         onPressed: () {
           Navigator.pop(context);
-          Fluttertoast.showToast(
-              msg: 'Click edit profile picture',
-              toastLength: Toast.LENGTH_SHORT);
+          Fluttertoast.showToast(msg: 'Click edit profile picture', toastLength: Toast.LENGTH_SHORT);
         },
-        child: const Text('Yes', style: TextStyle(color: SOFT_BLUE)));
+        child: const Text('Yes', style: TextStyle(color: SOFT_BLUE))
+    );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      title: const Text(
-        'Edit Profile Picture',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: const Text('Do you want to edit profile picture ?',
-          style: TextStyle(fontSize: 13, color: BLACK_GREY)),
+      title: const Text('Edit Profile Picture', style: TextStyle(fontSize: 18),),
+      content: const Text('Do you want to edit profile picture ?', style: TextStyle(fontSize: 13, color: BLACK_GREY)),
       actions: [
         cancelButton,
         continueButton,
@@ -389,8 +364,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
   Future<void> getProfile() async {
     CommonUtils.showProgressDialog(context);
     //var user_id = PreferenceUtils.getString("user_id");
-    final uri = Uri.parse(
-        "https://carismatic.online/api/userauth/get_user_profile/?user_id=6");
+    final uri = Uri.parse("https://carismatic.online/api/userauth/get_user_profile/?user_id=${await PreferenceUtils.getString("user_id")}");
     final headers = {
       'Content-Type': 'application/json',
     };

@@ -4,6 +4,8 @@ this is constant pages
 
 import 'package:flutter/material.dart';
 
+import '../ResponseModel/MainDataClass.dart';
+
 // color for apps
 const Color PRIMARY_COLOR = Color(0xFF10a19a);
 const Color ASSENT_COLOR = Color(0xFFe75f3f);
@@ -27,3 +29,5 @@ const String GLOBAL_URL = 'https://devkit.ijteknologi.com';
 
 
 const String LOCAL_IMAGES_URL = 'assets/';
+
+List<MainDataModel> COnstantMainDataList=[];
