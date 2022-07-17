@@ -350,6 +350,7 @@ class _MyCarCollectionScreenState extends State<MyCarCollectionScreen>
                           height: MediaQuery.of(context).size.height/1.75,
                               child: ListView.builder(
                                   shrinkWrap: true,
+                                    physics: BouncingScrollPhysics(),
                                     scrollDirection: Axis.vertical,
                                     itemCount: userCarData.length,
                                     itemBuilder: (context, index) {
