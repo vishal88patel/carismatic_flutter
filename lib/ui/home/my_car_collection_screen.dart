@@ -828,7 +828,6 @@ class _MyCarCollectionScreenState extends State<MyCarCollectionScreen>
 
     if (responseData["status"].toString() == "true") {
       CommonUtils.hideProgressDialog(context);
-      CommonUtils.showGreenToastMessage(responseData["message"]);
       FocusScope.of(context).unfocus();
       setState(() {});
     } else {

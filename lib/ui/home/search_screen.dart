@@ -13,21 +13,22 @@ import '../../utils/preferences.dart';
 
 class SearchScreen extends StatefulWidget {
   List<MainDataModel> ll;
-   SearchScreen({required this.ll});
+
+  SearchScreen({required this.ll});
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-
-  GetBrandResponseModel getBrandsResponseModel=GetBrandResponseModel();
-  GetBrandModelResponseModel getModel=GetBrandModelResponseModel();
-  List<Data> brandList=[];
-  List<MainDataModel> mainDataList=[];
-  List<MainDataModel> mainDataListSearchh=[];
- var searchWord="";
+  GetBrandResponseModel getBrandsResponseModel = GetBrandResponseModel();
+  GetBrandModelResponseModel getModel = GetBrandModelResponseModel();
+  List<Data> brandList = [];
+  List<MainDataModel> mainDataList = [];
+  List<MainDataModel> mainDataListSearchh = [];
+  var searchWord = "";
   List<SearchModel> Tempmatches = [];
+
   // List<SearchModel> _getSuggestions(String query) {
   //   List<SearchModel> matches = [];
   //   // matches.addAll(searchData);
@@ -45,36 +46,33 @@ class _SearchScreenState extends State<SearchScreen> {
   //       (data) => data.name.toLowerCase().contains(text.toLowerCase()));
   // }
   void searchDat(String text) {
-
-      // for(int i =0;i<mainDataList.length;i++){
-      //   for(int k=0;k<mainDataList[i].subCategory!.length;k++){
-      //     if(mainDataList[i].subCategory![k].name.toString().toLowerCase().contains(text.toLowerCase())){
-      //       mainDataListSearchh.add(mainDataList[i]);
-      //     }else{
-      //     }
-      //   }
-      // }  // for(int i =0;i<mainDataList.length;i++){
-      //   for(int k=0;k<mainDataList[i].subCategory!.length;k++){
-      //     if(mainDataList[i].subCategory![k].name.toString().toLowerCase().contains(text.toLowerCase())){
-      //       mainDataListSearchh.add(mainDataList[i]);
-      //     }else{
-      //     }
-      //   }
-      // }
+    // for(int i =0;i<mainDataList.length;i++){
+    //   for(int k=0;k<mainDataList[i].subCategory!.length;k++){
+    //     if(mainDataList[i].subCategory![k].name.toString().toLowerCase().contains(text.toLowerCase())){
+    //       mainDataListSearchh.add(mainDataList[i]);
+    //     }else{
+    //     }
+    //   }
+    // }  // for(int i =0;i<mainDataList.length;i++){
+    //   for(int k=0;k<mainDataList[i].subCategory!.length;k++){
+    //     if(mainDataList[i].subCategory![k].name.toString().toLowerCase().contains(text.toLowerCase())){
+    //       mainDataListSearchh.add(mainDataList[i]);
+    //     }else{
+    //     }
+    //   }
+    // }
     Scaffold.of(context).showSnackBar(SnackBar(content: Text(text)));
-      setState(() {
-
-      });
+    setState(() {});
   }
-  bool select=false;
+
+  bool select = false;
+
   @override
   void initState() {
-    Future.delayed(Duration(milliseconds: 4000),(){
-      setState(() {
-
-      });
+    Future.delayed(Duration(milliseconds: 4000), () {
+      setState(() {});
     });
-    mainDataList=widget.ll;
+    mainDataList = widget.ll;
     super.initState();
   }
 
@@ -83,79 +81,116 @@ class _SearchScreenState extends State<SearchScreen> {
     TextEditingController controller = TextEditingController();
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding:  EdgeInsets.only(left: 18.0,right: 18,bottom: 0,top: 18),
-                child: CUstomSearchBar(
-                    function: () {
-
-                    },
-                  onChanged: (val){
-                    // searchDat(val!);
-                    // searchWord=val;
-                    setState(() {
-
-                    });
-                  },
-                    readOnly: false,
-                    hint: "Search here...",
-                    validators: (e) {},
-                    keyboardTYPE: TextInputType.name, controller: controller,),
+          body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding:
+                  EdgeInsets.only(left: 18.0, right: 18, bottom: 0, top: 18),
+              child: CUstomSearchBar(
+                function: () {},
+                onChanged: (val) {
+                  // searchDat(val!);
+                  // searchWord=val;
+                  setState(() {});
+                },
+                readOnly: false,
+                hint: "Search here...",
+                validators: (e) {},
+                keyboardTYPE: TextInputType.name,
+                controller: controller,
               ),
-              Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: ListView.builder(
-                  itemCount: searchWord.isEmpty?mainDataList.length:mainDataListSearchh.length,
-                  scrollDirection: Axis.vertical,
-                  physics: BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    // List<String> templocalList=[];templocalList.clear();
-                    // for(int i=0;i<getModel.data!.length;i++){
-                    //   if(getBrandsResponseModel.data![index].brandId==getModel.data![i].brandId){
-                    //     templocalList.add(getModel.data![i].modelName.toString());
-                    //   }
-                    // }
-                    return Card(
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text( mainDataList[index].category.toString(),style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500),),
-                            Container(
-                              child: ListView.builder(
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: ListView.builder(
+                itemCount: searchWord.isEmpty
+                    ? mainDataList.length
+                    : mainDataListSearchh.length,
+                scrollDirection: Axis.vertical,
+                physics: BouncingScrollPhysics(),
+                itemBuilder: (context, index) {
+                  // List<String> templocalList=[];templocalList.clear();
+                  // for(int i=0;i<getModel.data!.length;i++){
+                  //   if(getBrandsResponseModel.data![index].brandId==getModel.data![i].brandId){
+                  //     templocalList.add(getModel.data![i].modelName.toString());
+                  //   }
+                  // }
+                  return Card(
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            mainDataList[index].category.toString(),
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w500),
+                          ),
+                          Container(
+                            child: ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
-                                  itemCount:  mainDataList[index].subCategory!.length,
-                                  itemBuilder: (BuildContext context, int i) {
-                                    return GestureDetector(
-                                      onTap: (){
-                                      },
-                                      child: ListTile(
-                                          trailing: Checkbox(onChanged: (bool? value) async {
-                                            SaveUserEntry(action: 'save_entry', model_id:  mainDataList[index].subCategory![i].modelId.toString(), user_id: "${await PreferenceUtils.getString("user_id")}", brand_id:  mainDataList[index].categoryId.toString(),MainIndex: index,SubIndex: i);
-                                          }, value: mainDataList[index].subCategory![i].isFavourite,),
-                                          title: Text(mainDataList[index].subCategory![i].name.toString())),
-                                    );
-                                  }),
-                            ),
-                          ],
-                        ),
+                                itemCount:
+                                    mainDataList[index].subCategory!.length,
+                                itemBuilder: (BuildContext context, int i) {
+                                  return GestureDetector(
+                                    onTap: () {},
+                                    child: ListTile(
+                                        trailing: Checkbox(
+                                          onChanged: (bool? value) async {
+                                            if(value==true){
+                                              print("save");
+                                              SaveUserEntry(
+                                                  action: 'save_entry',
+                                                  model_id: mainDataList[index]
+                                                      .subCategory![i]
+                                                      .modelId
+                                                      .toString(),
+                                                  user_id:
+                                                  "${await PreferenceUtils.getString("user_id")}",
+                                                  brand_id: mainDataList[index]
+                                                      .categoryId
+                                                      .toString(),
+                                                  MainIndex: index,
+                                                  SubIndex: i);
+                                            }
+                                            else{
+                                              print("delete");
+                                              mainDataList[index].subCategory?.removeAt(i);
+                                              deleteCar(mainDataList[index]
+                                                  .subCategory![i]
+                                                  .modelId
+                                                  .toString(),);
+                                            }
+
+                                          },
+                                          value: mainDataList[index]
+                                              .subCategory![i]
+                                              .isFavourite,
+                                        ),
+                                        title: Text(mainDataList[index]
+                                            .subCategory![i]
+                                            .name
+                                            .toString())),
+                                  );
+                                }),
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                ),
-              )
-            ],
-          ),
-        )
-      ),
+                    ),
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+      )),
     );
   }
+
   Future<void> SaveUserEntry({
     required String action,
     required String user_id,
@@ -163,14 +198,14 @@ class _SearchScreenState extends State<SearchScreen> {
     required String model_id,
     required int MainIndex,
     required int SubIndex,
-
   }) async {
     CommonUtils.showProgressDialog(context);
     final headers = {
       'Content-Type': 'application/json',
     };
 
-    var request = http.MultipartRequest('POST',Uri.parse("https://carismatic.online/api/common/save_entry"));
+    var request = http.MultipartRequest(
+        'POST', Uri.parse("https://carismatic.online/api/common/save_entry"));
 
     request.headers.addAll(headers);
     request.fields['action'] = action.toString();
@@ -185,7 +220,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
     if (responseData["status"].toString() == "true") {
       CommonUtils.hideProgressDialog(context);
-      mainDataList[MainIndex].subCategory![SubIndex].isFavourite=true;
+      mainDataList[MainIndex].subCategory![SubIndex].isFavourite = true;
       setState(() {});
     } else {
       CommonUtils.hideProgressDialog(context);
@@ -193,20 +228,47 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
+  Future<void> deleteCar(String model_id,) async {
+    CommonUtils.showProgressDialog(context);
+    final headers = {
+      'Content-Type': 'application/json',
+    };
 
+    var request = http.MultipartRequest('POST',
+        Uri.parse("https://carismatic.online/api/common/delete_car_entry"));
+
+    request.headers.addAll(headers);
+    request.fields['user_id'] = PreferenceUtils.getString("user_id");
+    request.fields['model_id'] = model_id.toString();
+    request.fields['action'] = "delete_entry";
+
+    var response = await request.send();
+
+    var responsed = await http.Response.fromStream(response);
+    final responseData = json.decode(responsed.body);
+
+    if (responseData["status"].toString() == "true") {
+      CommonUtils.hideProgressDialog(context);
+      FocusScope.of(context).unfocus();
+      setState(() {});
+    } else {
+      CommonUtils.hideProgressDialog(context);
+      CommonUtils.showRedToastMessage(responseData["message"]);
+    }
+  }
 }
-
 
 class CUstomSearchBar extends StatelessWidget {
   CUstomSearchBar(
       {Key? key,
-        required this.controller,
-        required this.readOnly,
-        required this.hint,
-        required this.validators,
-        required this.keyboardTYPE,
-        required this.function,
-        this.maxlength, this.onChanged})
+      required this.controller,
+      required this.readOnly,
+      required this.hint,
+      required this.validators,
+      required this.keyboardTYPE,
+      required this.function,
+      this.maxlength,
+      this.onChanged})
       : super(key: key);
 
   final TextEditingController controller;
@@ -223,7 +285,9 @@ class CUstomSearchBar extends StatelessWidget {
     return SizedBox(
       height: 50,
       child: TextFormField(
-        onTap:(){function.call();} ,
+        onTap: () {
+          function.call();
+        },
         readOnly: readOnly,
         validator: validators,
         onChanged: onChanged,
@@ -235,7 +299,6 @@ class CUstomSearchBar extends StatelessWidget {
           filled: true,
           fillColor: Colors.grey.withOpacity(0.1),
           focusedBorder: OutlineInputBorder(
-
             borderRadius: BorderRadius.circular(8),
             borderSide: const BorderSide(
               width: 0,
@@ -261,5 +324,4 @@ class CUstomSearchBar extends StatelessWidget {
       ),
     );
   }
-
 }
