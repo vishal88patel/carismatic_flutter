@@ -403,7 +403,6 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
     if (responseData["status"].toString() == "true") {
       profile.clear();
       profile = responseData;
-      CommonUtils.showGreenToastMessage("profile Successfully");
       setState(() {});
     } else {
       CommonUtils.hideProgressDialog(context);
