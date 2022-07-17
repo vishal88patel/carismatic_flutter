@@ -327,7 +327,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     var request = http.MultipartRequest('POST',Uri.parse("https://carismatic.online/api/userauth/update_profile"));
 
     request.headers.addAll(headers);
-    request.fields['user_id'] = "6";
+    request.fields['user_id'] = PreferenceUtils.getString("user_id");
     request.fields['firstname'] = _etFirstName.text.toString();
     request.fields['lastname'] = _etLastName.text.toString();
     request.fields['username'] = _etUserName.text.toString();

@@ -389,7 +389,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
   Future<void> getProfileWithoutLoader() async {
     //var user_id = PreferenceUtils.getString("user_id");
     final uri = Uri.parse(
-        "https://carismatic.online/api/userauth/get_user_profile/?user_id=6");
+        "https://carismatic.online/api/userauth/get_user_profile/?user_id=${await PreferenceUtils.getString("user_id")}");
     final headers = {
       'Content-Type': 'application/json',
     };
